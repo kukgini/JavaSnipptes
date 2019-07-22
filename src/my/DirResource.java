@@ -7,6 +7,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 
+/**
+ * https://howtodoinjava.com/java8/java-8-list-all-files-example/
+ * http://forum.falinux.com/zbxe/?document_srl=588577&mid=lecture_tip&comment_srl=517498&sort_index=readed_count&order_type=asc&l=ru
+ * https://www.programcreek.com/java-api-examples/?class=java.nio.file.DirectoryStream&method=close
+ */
 public class DirResource {
 	public static void main(String[] args) {
 		DirResource.ls(System.getProperty("java.io.tmpdir"), "*.txt", System.out::println);
