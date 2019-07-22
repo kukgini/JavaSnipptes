@@ -1,5 +1,6 @@
 package my;
 
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -7,12 +8,11 @@ import java.util.stream.Stream;
 public class StringCompressor {
 
 	public static void main(String[] args) {
-		Stream<String> s = compress("ABBCCCDDDDDEEEEEFFFFFFG");
-		String result = s.collect(Collectors.joining());
-		System.out.println(result);
+		compress("ABBCCCDDDDDEEEEEFFFFFFG", x -> {
+			System.out.print(x);
+		});
 	}
-	public static Stream<String> compress(String str) {
-		Stream.Builder<String> b =  Stream.<String>builder();
+	public static void compress(String str, Consumer<String> block) {
 		final Pair<Integer,Integer> p = new Pair<Integer,Integer>(null, null);	
 		IntStream s = str.chars();		
 		s.boxed().forEach(x -> {
@@ -23,12 +23,11 @@ public class StringCompressor {
 			if (x.equals(p.getKey())){
 				p.setVal(p.getVal() + 1);
 			} else {
-				b.add(String.format("%s%s", new Character((char)p.getKey().intValue()), p.getVal()));
+				block.accept(String.format("%s%s", new Character((char)p.getKey().intValue()), p.getVal()));
 				p.setKey(x);
 				p.setVal(1);
 			}
 		});
-		b.add(String.format("%s%s", new Character((char)p.getKey().intValue()), p.getVal()));
-		return b.build();	
+		block.accept(String.format("%s%s", new Character((char)p.getKey().intValue()), p.getVal()));	
 	}
 }
