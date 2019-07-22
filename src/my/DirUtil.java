@@ -5,8 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class DirCleaner {
-	public static void run(String path) throws IOException {
+public class DirUtil {
+	public static void clean(String path) throws IOException {
 		Files.walk(Paths.get(path))
 		    .map(Path::toFile)
 		    .filter(File::isFile)
