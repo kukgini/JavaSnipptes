@@ -18,9 +18,9 @@ public class LineCompresser {
 			return String.format("%s%s", new Character((char)c.intValue()), count);
 		};
         String filename = "data/TEXTFILE.TXT";
-        compress(FileReader.lines(filename), lineFormatter, y -> {
-    		StringCompressor.compress(y.chars(), charactorFormatter, z -> {
-    			System.out.print(z);
+        LineCompresser.compress(FileReader.lines(filename), lineFormatter, x -> {
+    		StringCompressor.compress(x.chars(), charactorFormatter, y -> {
+    			System.out.print(y);
     		});
         });      
     }
