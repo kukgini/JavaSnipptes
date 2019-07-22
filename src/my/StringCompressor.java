@@ -7,10 +7,10 @@ import java.util.stream.IntStream;
 public class StringCompressor {
 
 	public static void main(String[] args) {
-		BiFunction<Integer,Integer,String> formatter = (i,j) -> {
-			return String.format("%s%s", new Character((char)i.intValue()), j);
+		BiFunction<Integer,Integer,String> charactorFormatter = (c,count) -> {
+			return String.format("%s%s", new Character((char)c.intValue()), count);
 		};
-		compress("ABBCCCDDDDDEEEEEFFFFFFG".chars(), formatter, x -> {
+		compress("ABBCCCDDDDDEEEEEFFFFFFG".chars(), charactorFormatter, x -> {
 			System.out.print(x);
 		});
 	}
