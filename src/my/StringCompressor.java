@@ -1,20 +1,21 @@
 package my;
 
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class StringCompressor {
 
 	public static void main(String[] args) {
-		compress("ABBCCCDDDDDEEEEEFFFFFFG", x -> {
+		BiFunction<Integer,Integer,String> formatter = (i,j) -> {
+			return String.format("%s%s", new Character((char)i.intValue()), j);
+		};
+		compress("ABBCCCDDDDDEEEEEFFFFFFG".chars(), formatter, x -> {
 			System.out.print(x);
 		});
 	}
-	public static void compress(String str, Consumer<String> block) {
-		final Pair<Integer,Integer> p = new Pair<Integer,Integer>(null, null);	
-		IntStream s = str.chars();		
+	public static void compress(IntStream s, BiFunction<Integer,Integer,String> formatter, Consumer<String> block) {
+		final Pair<Integer,Integer> p = new Pair<Integer,Integer>(null, null);			
 		s.boxed().forEach(x -> {
 			if (p.getKey() == null) {
 				p.setKey(x);
@@ -23,11 +24,13 @@ public class StringCompressor {
 			if (x.equals(p.getKey())){
 				p.setVal(p.getVal() + 1);
 			} else {
-				block.accept(String.format("%s%s", new Character((char)p.getKey().intValue()), p.getVal()));
+				block.accept(formatter.apply(p.getKey(), p.getVal()));
 				p.setKey(x);
 				p.setVal(1);
 			}
 		});
-		block.accept(String.format("%s%s", new Character((char)p.getKey().intValue()), p.getVal()));	
+		if (p.getKey() != null) {
+			block.accept(formatter.apply(p.getKey(), p.getVal()));	
+		}
 	}
 }

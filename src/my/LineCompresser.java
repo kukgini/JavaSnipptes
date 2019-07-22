@@ -1,41 +1,41 @@
 package my;
 
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class LineCompresser {
+	
     public static void main(String[] args) {
-        BiConsumer<Integer,String>linePrinter = (c,s) -> {
+        BiFunction<Integer,String,String>lineFormatter = (c,s) -> {
             if (c > 1) {
-                System.out.printf("%d#%s%n", c,s);
+                return String.format("%d#%s%n", c,s);
             } else {
-                System.out.printf("%s%n", s);
+                return String.format("%s%n", s);
             }
         };
-        my.LineCompresser compresser = new my.LineCompresser();
-        my.FileReader.read("data/TEXTFILE.TXT", line -> 
-            compresser.compress(line, linePrinter));
-        compresser.thenFinally(linePrinter);
+        Stream.Builder<String> builder = Stream.builder();
+        my.FileReader.read("data/TEXTFILE.TXT", builder::add);
+        compress(builder.build(), lineFormatter, System.out::print);      
     }
     
-    private String previous = null;
-    private int count = 0;
-
-    public LineCompresser compress(String s, BiConsumer<Integer,String> consumer) {
-        if (s != null && s.equals(previous)) {
-            count++;
-        } else {
-            if (previous != null) {
-                consumer.accept(count,previous);
-            }
-            previous = s;
-            count = 1;
-        }
-        return this;
-    }
-    public void thenFinally(BiConsumer<Integer,String> consumer) {
-        if (previous != null) {
-            consumer.accept(count, previous);
-        }
-    }
-
+	public static void compress(Stream<String> s, BiFunction<Integer,String,String> formatter, Consumer<String> block) {
+		final Pair<String,Integer> p = new Pair<String,Integer>(null, null);			
+		s.forEach(x -> {
+			if (p.getKey() == null) {
+				p.setKey(x);
+				p.setVal(1);
+			} else 
+			if (x.equals(p.getKey())){
+				p.setVal(p.getVal() + 1);
+			} else {
+				block.accept(formatter.apply(p.getVal(), p.getKey()));
+				p.setKey(x);
+				p.setVal(1);
+			}
+		});
+		if (p.getKey() != null) {
+			block.accept(formatter.apply(p.getVal(), p.getKey()));
+		}
+	}
 }
