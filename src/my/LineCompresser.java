@@ -17,16 +17,18 @@ public class LineCompresser {
 		BiFunction<Integer,Integer,String> charactorFormatter = (c,count) -> {
 			return String.format("%s%s", new Character((char)c.intValue()), count);
 		};
-        Stream.Builder<String> builder = Stream.builder();
-        my.FileReader.read("data/TEXTFILE.TXT", builder::add);
-        compress(builder.build(), lineFormatter, x -> {
-    		StringCompressor.compress(x.chars(), charactorFormatter, System.out::print);
+        String filename = "data/TEXTFILE.TXT";
+        compress(FileReader.lines(filename), lineFormatter, y -> {
+    		StringCompressor.compress(y.chars(), charactorFormatter, z -> {
+    			System.out.print(z);
+    		});
         });      
     }
     
 	public static void compress(Stream<String> s, BiFunction<String,Integer,String> formatter, Consumer<String> block) {
 		final Pair<String,Integer> p = new Pair<String,Integer>(null, null);			
 		s.forEach(x -> {
+			System.out.println("compress line:" + x);
 			if (p.getKey() == null) {
 				p.setKey(x);
 				p.setVal(1);
