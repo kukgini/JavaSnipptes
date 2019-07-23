@@ -1,26 +1,41 @@
 package my;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.function.Consumer;
 
-public class FileChannelWriter {
-    // http://www.baeldung.com/java-write-to-file
-    public static void write(String fileName, Consumer<String> consumer) {
-        RandomAccessFile stream = new RandomAccessFile(fileName, "rw");
-        FileChannel channel = stream.getChannel();
-        consumer.accept(channel);
-        byte[] strBytes = value.getBytes();
+public class FileChannelWriter implements Closeable {
+	
+	private FileChannel channel;
+	
+	@Override
+	public void close() throws IOException {
+		if (channel != null) channel.close();
+	}
+	
+	public void write(String s) {
+		byte[] strBytes = s.getBytes();
         ByteBuffer buffer = ByteBuffer.allocate(strBytes.length);
         buffer.put(strBytes);
         buffer.flip();
-        channel.write(buffer);
-        stream.close();
-        channel.close();
-
-        // verify
-        //RandomAccessFile reader = new RandomAccessFile(fileName, "r");
-        //assertEquals(value, reader.readLine());
-        //reader.close();
+        try {
+			channel.write(buffer);
+		} catch (IOException e) {
+			new RuntimeException(e);
+		}
+	}
+	
+    public static void write(String fileName, Consumer<FileChannelWriter> consumer) {
+    	try (RandomAccessFile stream = new RandomAccessFile(fileName, "rw");
+             FileChannel channel = stream.getChannel();
+    		 FileChannelWriter instance = new FileChannelWriter();) 
+    	{
+	    	instance.channel = channel;
+	        consumer.accept(instance);
+    	} catch (Exception e) {
+    		new RuntimeException(e);
+    	}
     }
 }
