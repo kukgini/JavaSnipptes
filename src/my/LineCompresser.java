@@ -14,8 +14,8 @@ public class LineCompresser {
                 return String.format("%s%n", line);
             }
         };
-		BiFunction<Integer,Integer,String> charactorFormatter = (c,count) -> {
-			return String.format("%s%s", new Character((char)c.intValue()), count);
+		BiFunction<Character,Integer,String> charactorFormatter = (c,count) -> {
+			return String.format("%s%s", c, count);
 		};
         String filename = "data/TEXTFILE.TXT";
         LineCompresser.compress(FileReader.lines(filename), lineFormatter, x -> {
