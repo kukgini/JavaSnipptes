@@ -7,29 +7,30 @@ import java.util.stream.IntStream;
 public class StringCompressor {
 
 	public static void main(String[] args) {
-		BiFunction<Integer, Integer, String> charactorFormatter = (c, n) -> {
+		BiFunction<Character, Integer, String> charactorFormatter = (c, n) -> {
 			if (n > 2) {
-				return String.format("%s%s", new Character((char) c.intValue()), n);
+				return String.format("%d%s", n, c);
 			} else {
-				return String.format("%0" + n + "d", 0).replace("0", Character.toString((char)c.intValue()));
+				return String.format("%0" + n + "d", 0).replace("0", Character.toString(c));
 			}
 		};
-		compress("ABBCCCDDDDDEEEEEFFFFFFG".chars(), charactorFormatter, x -> {
+		compress("ABBCCCDDDDDEEEEEFFFFFFGG".chars(), charactorFormatter, x -> {
 			System.out.print(x);
 		});
 	}
 
-	public static void compress(IntStream s, BiFunction<Integer, Integer, String> formatter, Consumer<String> block) {
-		final Pair<Integer, Integer> p = new Pair<Integer, Integer>(null, null);
+	public static void compress(IntStream s, BiFunction<Character, Integer, String> formatter, Consumer<String> block) {
+		final Pair<Character, Integer> p = new Pair<Character, Integer>(null, null);
 		s.boxed().forEach(x -> {
+			char c = (char)x.intValue();
 			if (p.getKey() == null) {
-				p.setKey(x);
+				p.setKey(c);
 				p.setVal(1);
-			} else if (x.equals(p.getKey())) {
+			} else if (p.getKey().equals(c)) {
 				p.setVal(p.getVal() + 1);
 			} else {
 				block.accept(formatter.apply(p.getKey(), p.getVal()));
-				p.setKey(x);
+				p.setKey(c);
 				p.setVal(1);
 			}
 		});
