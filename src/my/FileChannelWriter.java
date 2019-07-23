@@ -6,10 +6,10 @@ import java.nio.channels.FileChannel;
 
 public class FileChannelWriter {
     // http://www.baeldung.com/java-write-to-file
-    public static void write(String fileName) throws IOException {
+    public static void write(String fileName, Consumer<String> consumer) {
         RandomAccessFile stream = new RandomAccessFile(fileName, "rw");
         FileChannel channel = stream.getChannel();
-        String value = "Hello";
+        consumer.accept(channel);
         byte[] strBytes = value.getBytes();
         ByteBuffer buffer = ByteBuffer.allocate(strBytes.length);
         buffer.put(strBytes);
