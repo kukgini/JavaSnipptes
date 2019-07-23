@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class FileReader {
-    public static void read(String filename, Consumer<String> consumer) {
+    public static void lines(String filename, Consumer<String> consumer) {
         Charset charset = Charset.defaultCharset();
         try (FileInputStream inputStream = new FileInputStream(filename);
              Scanner sc = new Scanner(inputStream, charset.name());
@@ -31,13 +31,13 @@ public class FileReader {
     }
     public static Stream<String> lines(String filename) {
     	try {
-			return Files.lines(Paths.get(filename)).map(x -> { System.out.println("read line:" + x);return x;});
+			return Files.lines(Paths.get(filename));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
     }
 
     public static void main(String[] args) {
-        read(".project", System.out::println);
+    	FileReader.lines(".project", System.out::println);
     }
 }
