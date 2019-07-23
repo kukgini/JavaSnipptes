@@ -34,7 +34,7 @@ public class IntMetrix {
 		System.out.println();
 	}
 	public int get(int x, int y) {
-		return metrix[x][y];
+		return metrix[y][x];
 	}
 	public void spinCounterClockwise(int n) {
 		for (int y = 0; y < n / 2; y++) {
@@ -58,17 +58,28 @@ public class IntMetrix {
 	private void fromLeftToBottom(int n, int x, int y) {
 		metrix[n - 1 - x][n - 1 - y] = metrix[n - 1 - y][x];
 	}
-	// 이걸 어떻게 구현하지...
 	public boolean isSurroundedBy(int n, int x, int y) {
-		if ((x - 1) < 0 || (x + 1) >= metrix[y].length - 1) return false;
-		if ((y - 1) < 0 || (y + 1) >= metrix.length - 1) return false;
 		boolean b = true;
-		b &= (metrix[x - 1][y] == n) ? true : isSurroundedBy(n, x - 1, y);
-		b &= (metrix[x + 1][y] == n) ? true : isSurroundedBy(n, x + 1, y);
-		b &= (metrix[x][y - 1] == n) ? true : isSurroundedBy(n, x, y - 1);
-		b &= (metrix[x][y + 1] == n) ? true : isSurroundedBy(n, x, y + 1);
-		System.out.println();
-		System.out.printf("%s, %s surrounded by %s", x, y, b);
+		b &= westIs(n, x, y);
+		b &= eastIs(n, x, y);
+		b &= northIs(n, x, y);
+		b &= southIs(n, x, y);
 		return b;
+	}
+	private boolean westIs(int n, int x, int y) {
+		if (x < 1) return false;
+		return (metrix[x - 1][y] == n) ? true : westIs(n, x - 1, y);
+	}
+	private boolean eastIs(int n, int x, int y) {
+		if (x >= metrix[y].length - 1) return false;
+		return (metrix[x + 1][y] == n) ? true : eastIs(n, x + 1, y);
+	}
+	private boolean northIs(int n, int x, int y) {
+		if (y < 1) return false;
+		return (metrix[x][y - 1] == n) ? true : northIs(n, x, y - 1);
+	}
+	private boolean southIs(int n, int x, int y) {
+		if (y >= metrix.length - 1) return false;
+		return (metrix[x][y + 1] == n) ? true : southIs(n, x, y + 1);
 	}
 }
