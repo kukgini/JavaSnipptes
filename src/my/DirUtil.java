@@ -54,7 +54,7 @@ public class DirUtil {
 		try {
 			return Files.walk(Paths.get(start))
 					.filter(Files::isRegularFile)
-					.filter(x -> {return x.getFileName().endsWith(filename);})
+					.filter(x -> {return x.getFileName().toString().equals(filename);})
 					.findFirst();
 		} catch (IOException e) {
 			e.printStackTrace();
