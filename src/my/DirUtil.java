@@ -13,8 +13,11 @@ import java.util.stream.Stream;
  * https://howtodoinjava.com/java8/java-8-list-all-files-example/
  */
 public class DirUtil {
-	public static void clean(String path) throws IOException {
-		Files.walk(Paths.get(path))
+	public static void clear(String path) throws IOException {
+		clear(Paths.get(path));
+	}
+	public static void clear(Path path) throws IOException {
+		Files.walk(path)
 		    .map(Path::toFile)
 		    .filter(File::isFile)
 		    .forEach(File::delete);
@@ -31,14 +34,20 @@ public class DirUtil {
 		return list(path).filter(Files::isRegularFile);
 	}
 	public static Stream<Path> walk(String path) {
+		return walk(Paths.get(path));
+	}
+	public static Stream<Path> walk(Path path) {
 		try {
-			return Files.walk(Paths.get(path));
+			return Files.walk(path);
 		} catch (IOException e) {
 			new RuntimeException(e);
 		}
 		return Stream.empty();
 	}
 	public static Stream<Path> walkFiles(String path) {
+		return walkFiles(Paths.get(path));
+	}
+	public static Stream<Path> walkFiles(Path path) {
 		return walk(path).filter(Files::isRegularFile);
 	}
 	public static Optional<Path> findFileFirst(String start, String filename) {
