@@ -7,25 +7,24 @@ import java.util.stream.Stream;
 public class LineCompresser {
 	
     public static void main(String[] args) {
-        BiFunction<String,Integer,String>lineFormatter = (line,count) -> {
-            if (count > 1) {
-                return String.format("%d#%s%n", count,line);
-            } else {
-                return String.format("%s%n", line);
-            }
-        };
-		BiFunction<Character,Integer,String> charactorFormatter = (c,count) -> {
-			return String.format("%s%s", c, count);
-		};
+
         String filename = "data/TEXTFILE.TXT";
-        LineCompresser.compress(FileReader.lines(filename), lineFormatter, x -> {
-    		StringCompressor.compress(x.chars(), charactorFormatter, y -> {
+        LineCompresser.doIt(FileReader.lines(filename), defaultFormatter, x -> {
+    		StringCompressor.doIt(x.chars(), StringCompressor.defaultFormatter, y -> {
     			System.out.print(y);
     		});
         });      
     }
     
-	public static void compress(Stream<String> s, BiFunction<String,Integer,String> formatter, Consumer<String> block) {
+    public static final BiFunction<String,Integer,String> defaultFormatter = (line,count) -> {
+        if (count > 1) {
+            return String.format("%d#%s%n", count,line);
+        } else {
+            return String.format("%s%n", line);
+        }
+    };
+    
+	public static void doIt(Stream<String> s, BiFunction<String,Integer,String> formatter, Consumer<String> block) {
 		final Pair<String,Integer> p = new Pair<String,Integer>();		
 		s.forEach(x -> {
 			System.out.println("compress line:" + x);

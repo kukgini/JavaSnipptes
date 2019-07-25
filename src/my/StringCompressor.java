@@ -7,19 +7,20 @@ import java.util.stream.IntStream;
 public class StringCompressor {
 
 	public static void main(String[] args) {
-		BiFunction<Character, Integer, String> charactorFormatter = (c, n) -> {
-			if (n > 2) {
-				return String.format("%d%s", n, c);
-			} else {
-				return String.format("%0" + n + "d", 0).replace("0", Character.toString(c));
-			}
-		};
-		compress("ABBCCCDDDDDEEEEEFFFFFFGG".chars(), charactorFormatter, x -> {
+		StringCompressor.doIt("ABBCCCDDDDDEEEEEFFFFFFGG".chars(), defaultFormatter, x -> {
 			System.out.print(x);
 		});
 	}
-
-	public static void compress(IntStream s, BiFunction<Character, Integer, String> formatter, Consumer<String> block) {
+	
+	public static final BiFunction<Character, Integer, String> defaultFormatter = (c, n) -> {
+		if (n > 2) {
+			return String.format("%d%s", n, c);
+		} else {
+			return String.format("%0" + n + "d", 0).replace("0", Character.toString(c));
+		}
+	};
+	
+	public static void doIt(IntStream s, BiFunction<Character, Integer, String> formatter, Consumer<String> block) {
 		final Pair<Character, Integer> p = new Pair<Character, Integer>();
 		s.boxed().forEach(x -> {
 			char c = (char)x.intValue();
