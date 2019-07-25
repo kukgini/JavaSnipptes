@@ -10,7 +10,7 @@ import java.net.*;
  *
  * @author www.codejava.net
  */
-public class MultiThreadReverseServer {
+public class ReverseServerMultiThreaded {
  
     public static void main(String[] args) {
         if (args.length < 1) return;
