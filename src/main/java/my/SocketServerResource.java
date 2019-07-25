@@ -14,14 +14,18 @@ import java.util.function.BiConsumer;
 
 public class SocketServerResource 
 {
-	// netcat client usage: echo Again | nc 127.0.0.1 8080
+	// netcat client usage: nc 127.0.0.1 8080
 	public static void main(String[] args) {
 		SocketServerResource.use(8080, (r,w) -> {
-			System.out.println("read input.");
-			String s = readLine(r);
-			System.out.println("hello %s." + s);
-			w.printf("hello %s", s);
-			w.flush();
+			System.out.println("begin use.");
+			while (true) {
+				String s = readLine(r);
+				if (s == null) break;
+				if (s.equals("bye")) break;
+				
+				w.printf("input was: %s%n", s);
+			}
+			System.out.println("end of use.");
 		});
 	}
 	public static String readLine(BufferedReader r) {
