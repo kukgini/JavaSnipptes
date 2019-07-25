@@ -26,23 +26,23 @@ public class LineCompresser {
     }
     
 	public static void compress(Stream<String> s, BiFunction<String,Integer,String> formatter, Consumer<String> block) {
-		final Pair<String,Integer> p = new Pair<String,Integer>(null, null);			
+		final Pair<String,Integer> p = new Pair<String,Integer>();		
 		s.forEach(x -> {
 			System.out.println("compress line:" + x);
-			if (p.getKey() == null) {
-				p.setKey(x);
-				p.setVal(1);
+			if (p.v1 == null) {
+				p.v1 = x;
+				p.v2 = 1;
 			} else 
-			if (x.equals(p.getKey())){
-				p.setVal(p.getVal() + 1);
+			if (x.equals(p.v1)){
+				p.v2 = p.v2 + 1;
 			} else {
-				block.accept(formatter.apply(p.getKey(), p.getVal()));
-				p.setKey(x);
-				p.setVal(1);
+				block.accept(formatter.apply(p.v1, p.v2));
+				p.v1 = x;
+				p.v2 = 1;
 			}
 		});
-		if (p.getKey() != null) {
-			block.accept(formatter.apply(p.getKey(), p.getVal()));
+		if (p.v1 != null) {
+			block.accept(formatter.apply(p.v1, p.v2));
 		}
 	}
 }

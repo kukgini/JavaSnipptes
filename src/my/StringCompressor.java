@@ -20,22 +20,22 @@ public class StringCompressor {
 	}
 
 	public static void compress(IntStream s, BiFunction<Character, Integer, String> formatter, Consumer<String> block) {
-		final Pair<Character, Integer> p = new Pair<Character, Integer>(null, null);
+		final Pair<Character, Integer> p = new Pair<Character, Integer>();
 		s.boxed().forEach(x -> {
 			char c = (char)x.intValue();
-			if (p.getKey() == null) {
-				p.setKey(c);
-				p.setVal(1);
-			} else if (p.getKey().equals(c)) {
-				p.setVal(p.getVal() + 1);
+			if (p.v1 == null) {
+				p.v1 = c;
+				p.v2 = 1;
+			} else if (p.v1.equals(c)) {
+				p.v2 = (p.v2 + 1);
 			} else {
-				block.accept(formatter.apply(p.getKey(), p.getVal()));
-				p.setKey(c);
-				p.setVal(1);
+				block.accept(formatter.apply(p.v1, p.v2));
+				p.v1 = c;
+				p.v2 = 1;
 			}
 		});
-		if (p.getKey() != null) {
-			block.accept(formatter.apply(p.getKey(), p.getVal()));
+		if (p.v1 != null) {
+			block.accept(formatter.apply(p.v1, p.v2));
 		}
 	}
 
