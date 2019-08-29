@@ -6,11 +6,11 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.function.Consumer;
 
-public class WindowsProcessForker {
+public class WindowsProcessResource {
     static public void main(String[] args) {
-        forkProcess("dir", System.out::println);  
+        WindowsProcessResource.use("dir", System.out::println);  
     }
-    static public String forkProcess(String cmd, Consumer<String> c) {
+    static public String use(String cmd, Consumer<String> c) {
         String result = null;
         ProcessBuilder builder = new ProcessBuilder();
         builder.command("cmd", "/c", cmd);
