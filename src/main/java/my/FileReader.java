@@ -10,6 +10,10 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class FileReader {
+    public static void main(String[] args) {
+        FileReader.lines(".project", System.out::println);
+    }
+
     public static void lines(String filename, Consumer<String> consumer) {
         Charset charset = Charset.defaultCharset();
         try (FileInputStream inputStream = new FileInputStream(filename);
@@ -35,9 +39,5 @@ public class FileReader {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-    }
-
-    public static void main(String[] args) {
-    	FileReader.lines(".project", System.out::println);
     }
 }
