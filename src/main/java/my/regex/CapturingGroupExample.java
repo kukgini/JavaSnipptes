@@ -10,6 +10,7 @@ public class CapturingGroupExample {
         String pattern = "(.*)(\\d+)(.*)";
 
         // Create a Pattern object
+
         Pattern r = Pattern.compile(pattern);
 
         // Now create matcher object.
@@ -19,6 +20,8 @@ public class CapturingGroupExample {
             System.out.println("Found value: " + m.group(0) );
             System.out.println("Found value: " + m.group(1) );
             System.out.println("Found value: " + m.group(2) );
+            System.out.println("Found value: " + m.group(3) );
+            System.out.println("Found value: " + m.group(4) );
         } else {
             System.out.println("NO MATCH");
         }
