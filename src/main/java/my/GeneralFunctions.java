@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-public class FileChannelFunctions {
+public class GeneralFunctions {
 	static public ByteBuffer stob(String s) {
 		byte[] strBytes = s.getBytes();
         ByteBuffer buffer = ByteBuffer.allocate(strBytes.length);
@@ -17,6 +17,13 @@ public class FileChannelFunctions {
 			channel.write(stob(s));
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	static public void sleep(int millisec) {
+		try {
+			Thread.sleep(millisec);
+		} catch (InterruptedException e) {
+			// ignore
 		}
 	}
 }
