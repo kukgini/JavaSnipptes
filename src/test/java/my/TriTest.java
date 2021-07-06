@@ -3,6 +3,7 @@ package my;
 import static org.junit.Assert.*;
 import java.util.Date;
 
+import my.helper.Tri;
 import org.junit.Test;
 
 public class TriTest {
