@@ -1,4 +1,4 @@
-package my.httpserver;
+package my.http;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
