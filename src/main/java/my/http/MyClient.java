@@ -9,8 +9,9 @@ public class MyClient {
         HttpClient httpClient = new HttpClient();
         httpClient.start();
         ContentResponse response = httpClient
-            .newRequest("http://127.0.0.1:8080/mypath")
+            .newRequest("http://127.0.0.1:8080/hello")
             .method(HttpMethod.GET)
+            .header("x-api-key", "abcd")
             .send();
         System.out.println(response.getContentAsString());
     }

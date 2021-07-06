@@ -18,7 +18,8 @@ public class MyServer {
         server.addConnector(http);
 
         ServletHandler servletHandler = new ServletHandler();
-        servletHandler.addServletWithMapping(MyServlet.class, "/mypath");
+        servletHandler.addServletWithMapping(HelloServlet.class, "/hello");
+        servletHandler.addServletWithMapping(EchoServlet.class, "/echo");
         server.setHandler(servletHandler);
 
         server.start();
