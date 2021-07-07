@@ -15,11 +15,11 @@ public class MyServer {
         ServerConnector http = new ServerConnector(server);
         http.setHost("127.0.0.1");
         http.setPort(8080);
+
         server.addConnector(http);
 
         ServletHandler servletHandler = new ServletHandler();
         servletHandler.addServletWithMapping(HelloServlet.class, "/hello");
-        servletHandler.addServletWithMapping(EchoServlet.class, "/echo");
         server.setHandler(servletHandler);
 
         server.start();

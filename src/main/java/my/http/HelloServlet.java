@@ -1,5 +1,6 @@
 package my.http;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,8 +11,9 @@ public class HelloServlet extends APIServlet {
 
     private static final long serialVersionUID = 1L;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setStatus(200);
-        response.getWriter().write("Hello!");
+    public Person execute(Person input) {
+        Person output = new Person();
+        output.setName(((Person)input).getName());
+        return output;
     }
 }

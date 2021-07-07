@@ -2,8 +2,10 @@ package my.helper;
 
 public class CaesarCipher {
 	public static void main(String[] args) {
-		String result = encript("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
-		System.out.println(result.equals("VWXYZABCDEFGHIJKLMNOPQRSTU"));
+		String input = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String expected = "VWXYZABCDEFGHIJKLMNOPQRSTU";
+		String result = encript(input, 5);
+		System.out.println(result.equals(expected));
 		System.out.println(result);
 	}
 	public static String encript(String input, int distance) {
