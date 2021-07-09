@@ -19,7 +19,7 @@ public class MyServer {
         server.addConnector(http);
 
         ServletHandler servletHandler = new ServletHandler();
-        servletHandler.addServletWithMapping(HelloServlet.class, "/hello");
+        servletHandler.addServletWithMapping(Actions.class, "/");
         server.setHandler(servletHandler);
 
         server.start();
