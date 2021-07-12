@@ -1,6 +1,5 @@
 package my.http;
 
-import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHandler;
 
@@ -11,7 +10,7 @@ public class MyServer {
     }
 
     public void start() throws Exception {
-        Server server = new Server();
+        org.eclipse.jetty.server.Server server = new org.eclipse.jetty.server.Server();
         ServerConnector http = new ServerConnector(server);
         http.setHost("127.0.0.1");
         http.setPort(8080);
@@ -19,7 +18,7 @@ public class MyServer {
         server.addConnector(http);
 
         ServletHandler servletHandler = new ServletHandler();
-        servletHandler.addServletWithMapping(JsonActions.class, "/");
+        servletHandler.addServletWithMapping(MyServlet.class, "/");
         server.setHandler(servletHandler);
 
         server.start();

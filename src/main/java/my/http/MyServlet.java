@@ -12,9 +12,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.stream.Collectors;
 
-public class JsonServlet extends HttpServlet {
+public class MyServlet extends HttpServlet {
 
     private Gson gson = new Gson();
+    private MyActions actions = new MyActions();
 
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -28,7 +29,7 @@ public class JsonServlet extends HttpServlet {
             invoke(method, payload, resp.getWriter());
         } catch (Throwable t) {
             t.printStackTrace();
-            print(resp.getWriter(), new JsonError(t), JsonError.class);
+            print(resp.getWriter(), new MyError(t), MyError.class);
             resp.setStatus(500);
         }
     }
@@ -38,9 +39,9 @@ public class JsonServlet extends HttpServlet {
         Object result = null;
         if (method.getParameterCount() > 0) {
             param = map2obj(payload, method.getParameterTypes()[0]);
-            result = method.invoke(this, param);
+            result = method.invoke(actions, param);
         } else {
-            result = method.invoke(this);
+            result = method.invoke(actions);
         }
         if (result != null) {
             Class outputType = method.getReturnType();
@@ -50,7 +51,7 @@ public class JsonServlet extends HttpServlet {
 
     private Method getMethod(String path) {
         if ("".equals(path)) { path = "home"; }
-        Method[] methods = this.getClass().getMethods();
+        Method[] methods = actions.getClass().getMethods();
         for (Method method : methods) {
             if (method.getName().equals(path)) {
                 return method;

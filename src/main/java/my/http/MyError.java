@@ -1,10 +1,10 @@
 package my.http;
 
-public class JsonError {
+public class MyError {
     int code;
     String message;
 
-    public JsonError (Throwable t) {
+    public MyError(Throwable t) {
         this.message = t.getMessage();
     }
 }
