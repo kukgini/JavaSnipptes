@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.stream.Collectors;
@@ -24,17 +25,15 @@ public class JsonServlet extends HttpServlet {
             Method method = getMethod(path);
 
             setHeadersForJson(resp);
-            Object output = invoke(method, payload);
-            Class outputType = method.getReturnType();
-            map2json(resp, output, outputType);
+            invoke(method, payload, resp.getWriter());
         } catch (Throwable t) {
             t.printStackTrace();
-            map2json(resp, new JsonError(t), JsonError.class);
+            print(resp.getWriter(), new JsonError(t), JsonError.class);
             resp.setStatus(500);
         }
     }
 
-    private Object invoke(Method method, String payload) throws InvocationTargetException, IllegalAccessException {
+    private void invoke(Method method, String payload, PrintWriter writer) throws InvocationTargetException, IllegalAccessException, IOException {
         Object input = null;
         Object output = null;
         if (method.getParameterCount() > 0) {
@@ -44,7 +43,10 @@ public class JsonServlet extends HttpServlet {
         } else {
             output = method.invoke(this);
         }
-        return output;
+        if (output != null) {
+            Class outputType = method.getReturnType();
+            print(writer, output, outputType);
+        }
     }
 
     private Method getMethod(String path) {
@@ -78,12 +80,12 @@ public class JsonServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
     }
 
-    private void map2json(HttpServletResponse resp, Object output, Class outputType) throws IOException {
+    private void print(PrintWriter writer, Object output, Class outputType) throws IOException {
         if (output == null) return;
         if (outputType.equals(String.class)) {
-            resp.getWriter().write((String) output);
+            writer.write((String) output);
         } else {
-            gson.toJson(output, resp.getWriter());
+            gson.toJson(output, writer);
         }
     }
 
