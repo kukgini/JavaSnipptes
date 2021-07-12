@@ -24,7 +24,7 @@ public class JsonServlet extends HttpServlet {
             String payload = getPayload(req);
             Method method = getMethod(path);
 
-            setHeadersForJson(resp);
+            setResponseHeaders(resp);
             invoke(method, payload, resp.getWriter());
         } catch (Throwable t) {
             t.printStackTrace();
@@ -74,7 +74,7 @@ public class JsonServlet extends HttpServlet {
         System.err.printf("x-api-key: %s%n", req.getHeader("x-api-key"));
     }
 
-    private void setHeadersForJson(HttpServletResponse resp) {
+    private void setResponseHeaders(HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
     }
