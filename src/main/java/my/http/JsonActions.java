@@ -1,6 +1,6 @@
 package my.http;
 
-public class Actions extends JsonServlet {
+public class JsonActions extends JsonServlet {
 
     private static final long serialVersionUID = 1L;
 
@@ -12,5 +12,9 @@ public class Actions extends JsonServlet {
 
     public String echo(String input) {
         return input;
+    }
+
+    public String home() {
+        return "Welcome !";
     }
 }

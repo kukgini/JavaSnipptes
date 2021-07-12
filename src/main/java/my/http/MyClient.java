@@ -14,5 +14,10 @@ public class MyClient {
             .header("x-api-key", "abcd")
             .send();
         System.out.println(response.getContentAsString());
+        response = httpClient
+            .newRequest("http://127.0.0.1:8080/")
+            .method(HttpMethod.GET)
+            .send();
+        System.out.println(response.getContentAsString());
     }
 }
