@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.stream.Collectors;
 
@@ -22,21 +23,32 @@ public class JsonServlet extends HttpServlet {
             String payload = getPayload(req);
             Method method = getMethod(path);
 
-            Class inputType = method.getParameterTypes()[0];
-            Object output = method.invoke(this, map2obj(payload, inputType));
-
             setHeadersForJson(resp);
-            resp.setStatus(200);
-
+            Object output = invoke(method, payload);
             Class outputType = method.getReturnType();
             map2json(resp, output, outputType);
         } catch (Throwable t) {
             t.printStackTrace();
-            resp.sendError(500);
+            map2json(resp, new JsonError(t), JsonError.class);
+            resp.setStatus(500);
         }
     }
 
+    private Object invoke(Method method, String payload) throws InvocationTargetException, IllegalAccessException {
+        Object input = null;
+        Object output = null;
+        if (method.getParameterCount() > 0) {
+            Class inputType = method.getParameterTypes()[0];
+            input = map2obj(payload, inputType);
+            output = method.invoke(this, input);
+        } else {
+            output = method.invoke(this);
+        }
+        return output;
+    }
+
     private Method getMethod(String path) {
+        if ("".equals(path)) { path = "home"; }
         Method[] methods = this.getClass().getMethods();
         for (Method method : methods) {
             if (method.getName().equals(path)) {
@@ -49,7 +61,7 @@ public class JsonServlet extends HttpServlet {
     private String getPayload(HttpServletRequest req) throws IOException {
         return req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
     }
-    
+
     private String getPath(HttpServletRequest req) {
         String path = req.getRequestURI();
         System.err.printf("path=%s%n", path);
@@ -67,6 +79,7 @@ public class JsonServlet extends HttpServlet {
     }
 
     private void map2json(HttpServletResponse resp, Object output, Class outputType) throws IOException {
+        if (output == null) return;
         if (outputType.equals(String.class)) {
             resp.getWriter().write((String) output);
         } else {
