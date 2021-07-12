@@ -34,18 +34,17 @@ public class JsonServlet extends HttpServlet {
     }
 
     private void invoke(Method method, String payload, PrintWriter writer) throws InvocationTargetException, IllegalAccessException, IOException {
-        Object input = null;
-        Object output = null;
+        Object param = null;
+        Object result = null;
         if (method.getParameterCount() > 0) {
-            Class inputType = method.getParameterTypes()[0];
-            input = map2obj(payload, inputType);
-            output = method.invoke(this, input);
+            param = map2obj(payload, method.getParameterTypes()[0]);
+            result = method.invoke(this, param);
         } else {
-            output = method.invoke(this);
+            result = method.invoke(this);
         }
-        if (output != null) {
+        if (result != null) {
             Class outputType = method.getReturnType();
-            print(writer, output, outputType);
+            print(writer, result, outputType);
         }
     }
 
