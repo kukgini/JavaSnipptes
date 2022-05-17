@@ -1,23 +1,43 @@
 package my.http;
 
+import com.google.gson.Gson;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.api.ContentProvider;
 import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpMethod;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.util.Iterator;
+
 public class MyClient {
+    private static Gson gson = new Gson();
+
     public static void main(String[] args) throws Exception {
-        HttpClient httpClient = new HttpClient();
-        httpClient.start();
-        ContentResponse response = httpClient
+        Charset charset = Charset.forName( "UTF-8" );
+        CharsetEncoder encoder = charset.newEncoder( );
+
+        HttpClient client = new HttpClient();
+        client.start();
+
+        Person person = new Person();
+        person.setName("Alice");
+        String payload = gson.toJson(person);
+        ByteBuffer buffer = encoder.encode(CharBuffer.wrap(payload));
+
+        ContentResponse response = client
             .newRequest("http://127.0.0.1:8080/hello")
-            .method(HttpMethod.GET)
+            .method(HttpMethod.POST).content(new StringContentProvider(payload))
             .header("x-api-key", "abcd")
             .send();
-        System.out.println(response.getContentAsString());
-        response = httpClient
+        System.out.printf("/hello => %s%n", response.getContentAsString());
+        response = client
             .newRequest("http://127.0.0.1:8080/")
             .method(HttpMethod.GET)
             .send();
-        System.out.println(response.getContentAsString());
+        System.out.printf("/ => %n", response.getContentAsString());
     }
 }

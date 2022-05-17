@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MyServlet extends HttpServlet {
@@ -21,9 +23,9 @@ public class MyServlet extends HttpServlet {
         try {
             validateAuthorized(req);
 
-            String path = getPath(req);
+            Map<String, String[]> params = req.getParameterMap();
             String payload = getPayload(req);
-            Method method = getMethod(path);
+            Method method = getMethod(req, payload);
 
             setResponseHeaders(resp);
             invoke(method, payload, resp.getWriter());
@@ -49,26 +51,34 @@ public class MyServlet extends HttpServlet {
         }
     }
 
-    private Method getMethod(String path) {
-        if ("".equals(path)) { path = "home"; }
+    private Method getMethod(HttpServletRequest req, String payload) {
+        String uri = req.getRequestURI();
+        System.out.printf("uri=%s%n", uri);
+
+        if (uri.startsWith("/")) { uri = uri.substring(1); }
+        if ("".equals(uri)) { uri = "home"; }
+
+        int paramCount = req.getParameterMap().size();
+        System.out.printf("param count=%s%n", paramCount);
+        if (payload != null && payload.trim().length() > 0) {
+            paramCount++;
+        }
+        System.out.printf("name=%s%n", uri);
+        System.out.printf("payload=%s%n", payload);
+        System.out.printf("param count=%s%n", paramCount);
         Method[] methods = actions.getClass().getMethods();
         for (Method method : methods) {
-            if (method.getName().equals(path)) {
-                return method;
+            if (method.getName().equals(uri)) {
+                if (method.getParameterCount() == paramCount){
+                    return method;
+                }
             }
         }
-        return null;
+        throw new RuntimeException("action not found=" + uri);
     }
 
     private String getPayload(HttpServletRequest req) throws IOException {
         return req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-    }
-
-    private String getPath(HttpServletRequest req) {
-        String path = req.getRequestURI();
-        System.err.printf("path=%s%n", path);
-        if (path.startsWith("/")) { path = path.substring(1); }
-        return path;
     }
 
     private void validateAuthorized(HttpServletRequest req) {
@@ -89,13 +99,13 @@ public class MyServlet extends HttpServlet {
         }
     }
 
-    private Object map2obj(String content, Class inputType) {
-        Object input = null;
-        if (inputType.equals(String.class)) {
-            input = content;
+    private Object map2obj(String content, Class type) {
+        Object result = null;
+        if ((content == null) || type.equals(String.class)) {
+            result = content;
         } else{
-            input = gson.fromJson(content, inputType);
+            result = gson.fromJson(content, type);
         }
-        return input;
+        return result;
     }
 }
