@@ -28,16 +28,28 @@ public class MyClient {
         String payload = gson.toJson(person);
         ByteBuffer buffer = encoder.encode(CharBuffer.wrap(payload));
 
-        ContentResponse response = client
-            .newRequest("http://127.0.0.1:8080/hello")
-            .method(HttpMethod.POST).content(new StringContentProvider(payload))
-            .header("x-api-key", "abcd")
-            .send();
-        System.out.printf("/hello => %s%n", response.getContentAsString());
-        response = client
-            .newRequest("http://127.0.0.1:8080/")
-            .method(HttpMethod.GET)
-            .send();
-        System.out.printf("/ => %n", response.getContentAsString());
+        {
+            ContentResponse response = client
+                    .newRequest("http://127.0.0.1:7070/hello")
+                    .method(HttpMethod.POST).content(new StringContentProvider(payload))
+                    .header("x-api-key", "--api-token-here--")
+                    .send();
+            System.out.printf("/hello => %s%n", response.getContentAsString());
+        }
+        {
+            ContentResponse response = client
+                    .newRequest("http://127.0.0.1:7070/echo")
+                    .method(HttpMethod.POST).content(new StringContentProvider(payload))
+                    .header("x-api-key", "--api-token-here--")
+                    .send();
+            System.out.printf("/echo => %s%n", response.getContentAsString());
+        }
+        {
+            ContentResponse response = client
+                    .newRequest("http://127.0.0.1:7070/")
+                    .method(HttpMethod.GET)
+                    .send();
+            System.out.printf("/ => %n", response.getContentAsString());
+        }
     }
 }

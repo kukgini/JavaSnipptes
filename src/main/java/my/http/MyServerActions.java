@@ -1,6 +1,6 @@
 package my.http;
 
-public class MyActions {
+public class MyServerActions {
 
     private static final long serialVersionUID = 1L;
 
@@ -14,7 +14,4 @@ public class MyActions {
         return input;
     }
 
-    public String home() {
-        return "Welcome!";
-    }
 }

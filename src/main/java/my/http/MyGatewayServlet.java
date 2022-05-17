@@ -10,14 +10,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MyServlet extends HttpServlet {
+public class MyGatewayServlet extends HttpServlet {
 
     private Gson gson = new Gson();
-    private MyActions actions = new MyActions();
+    private Object actions = new MyGatewayActions();
 
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {

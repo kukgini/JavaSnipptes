@@ -3,24 +3,22 @@ package my.http;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHandler;
 
-public class MyServer {
+public class MyGateway {
 
-    // https://java-design-patterns.com/patterns/
-    // https://java-design-patterns.com/patterns/api-gateway/
     public static void main(String[] args) throws Exception {
-        new MyServer().start();
+        new MyGateway().start();
     }
 
     public void start() throws Exception {
         org.eclipse.jetty.server.Server server = new org.eclipse.jetty.server.Server();
         ServerConnector http = new ServerConnector(server);
         http.setHost("127.0.0.1");
-        http.setPort(8080);
+        http.setPort(7070);
 
         server.addConnector(http);
 
         ServletHandler servletHandler = new ServletHandler();
-        servletHandler.addServletWithMapping(MyServerServlet.class, "/");
+        servletHandler.addServletWithMapping(MyGatewayServlet.class, "/");
         server.setHandler(servletHandler);
 
         server.start();
