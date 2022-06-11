@@ -1,4 +1,4 @@
-package my.http;
+package my.dto;
 
 public class Person {
 

@@ -1,5 +1,7 @@
 package my.http;
 
+import my.dto.Person;
+
 public class MyServerActions {
 
     private static final long serialVersionUID = 1L;

@@ -1,7 +1,7 @@
 package my.json;
 
 import com.google.gson.Gson;
-import my.http.Person;
+import my.dto.Person;
 
 public class MyJson {
 

@@ -1,8 +1,8 @@
 package my.http;
 
 import com.google.gson.Gson;
+import my.dto.Person;
 import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.api.ContentProvider;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpMethod;
@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.util.Iterator;
 
 public class MyClient {
     private static Gson gson = new Gson();

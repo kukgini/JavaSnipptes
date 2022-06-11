@@ -1,6 +1,7 @@
 package my.http;
 
 import com.google.gson.Gson;
+import my.dto.Person;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.util.StringContentProvider;
