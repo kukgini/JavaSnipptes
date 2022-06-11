@@ -37,7 +37,7 @@ public class MyServerServlet extends HttpServlet {
         Object param = null;
         Object result = null;
         if (method.getParameterCount() > 0) {
-            param = map2obj(payload, method.getParameterTypes()[0]);
+            param = str2obj(payload, method.getParameterTypes()[0]);
             result = method.invoke(actions, param);
         } else {
             result = method.invoke(actions);
@@ -92,7 +92,7 @@ public class MyServerServlet extends HttpServlet {
         }
     }
 
-    private Object map2obj(String content, Class type) {
+    private Object str2obj(String content, Class type) {
         Object result = null;
         if ((content == null) || type.equals(String.class)) {
             result = content;
