@@ -1,0 +1,38 @@
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'idea'
+	id 'maven-publish'
+}
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+configurations {
+
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('jettyVersion', '9.4.38.v20210224')
+}
+
+dependencies {
+	testImplementation "junit:junit:4.12"
+
+	implementation "com.google.code.gson:gson:2.8.9"
+	implementation "javax.servlet:javax.servlet-api:3.1.0"
+	implementation "org.eclipse.jetty:jetty-client:${jettyVersion}"
+	implementation "org.eclipse.jetty:jetty-http:${jettyVersion}"
+	implementation "org.eclipse.jetty:jetty-io:${jettyVersion}"
+	implementation "org.eclipse.jetty:jetty-security:${jettyVersion}"
+	implementation "org.eclipse.jetty:jetty-server:${jettyVersion}"
+	implementation "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
+	implementation "org.eclipse.jetty:jetty-util:${jettyVersion}"
+	implementation "org.eclipse.jetty:jetty-util-ajax:${jettyVersion}"
+}
+
