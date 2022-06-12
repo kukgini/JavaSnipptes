@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import my.dto.Person;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.client.api.Response;
+import org.eclipse.jetty.client.api.Result;
+import org.eclipse.jetty.client.util.InputStreamResponseListener;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpMethod;
 
@@ -11,6 +14,9 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.Queue;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MyClient {
     private static Gson gson = new Gson();
@@ -28,6 +34,8 @@ public class MyClient {
         ByteBuffer buffer = encoder.encode(CharBuffer.wrap(payload));
 
         {
+            AtomicLong length = new AtomicLong();
+            Queue<byte[]> queue = new LinkedTransferQueue<byte[]>();
             ContentResponse response = client
                     .newRequest("http://127.0.0.1:7070/hello")
                     .method(HttpMethod.POST).content(new StringContentProvider(payload))
