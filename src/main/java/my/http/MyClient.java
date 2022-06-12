@@ -27,26 +27,21 @@ public class MyClient {
 
         HttpClient client = new HttpClient();
         client.start();
-
-        Person person = new Person();
-        person.setName("Alice");
-        String payload = gson.toJson(person);
-        ByteBuffer buffer = encoder.encode(CharBuffer.wrap(payload));
-
         {
-            AtomicLong length = new AtomicLong();
-            Queue<byte[]> queue = new LinkedTransferQueue<byte[]>();
+            Person person = new Person();
+            person.setName("Alice");
+            String payload = gson.toJson(person);
             ContentResponse response = client
                     .newRequest("http://127.0.0.1:7070/hello")
                     .method(HttpMethod.POST).content(new StringContentProvider(payload))
                     .header("x-api-key", "--api-token-here--")
-                    .send();
+                .send();
             System.out.printf("/hello => %s%n", response.getContentAsString());
         }
         {
             ContentResponse response = client
                     .newRequest("http://127.0.0.1:7070/echo")
-                    .method(HttpMethod.POST).content(new StringContentProvider(payload))
+                    .method(HttpMethod.POST).content(new StringContentProvider("{\"shouting\":\"yahoo~\"}"))
                     .header("x-api-key", "--api-token-here--")
                     .send();
             System.out.printf("/echo => %s%n", response.getContentAsString());
@@ -58,7 +53,6 @@ public class MyClient {
                     .send();
             System.out.printf("/ => %n", response.getContentAsString());
         }
-        Thread.sleep(5000);
         client.stop();
     }
 }
