@@ -15,7 +15,9 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MyClient {
@@ -27,32 +29,38 @@ public class MyClient {
 
         HttpClient client = new HttpClient();
         client.start();
-        {
-            Person person = new Person();
-            person.setName("Alice");
-            String payload = gson.toJson(person);
-            ContentResponse response = client
-                    .newRequest("http://127.0.0.1:7070/hello")
-                    .method(HttpMethod.POST).content(new StringContentProvider(payload))
-                    .header("x-api-key", "--api-token-here--")
-                .send();
-            System.out.printf("/hello => %s%n", response.getContentAsString());
-        }
-        {
-            ContentResponse response = client
-                    .newRequest("http://127.0.0.1:7070/echo")
-                    .method(HttpMethod.POST).content(new StringContentProvider("{\"shouting\":\"yahoo~\"}"))
-                    .header("x-api-key", "--api-token-here--")
-                    .send();
-            System.out.printf("/echo => %s%n", response.getContentAsString());
-        }
-        {
-            ContentResponse response = client
-                    .newRequest("http://127.0.0.1:7070/")
-                    .method(HttpMethod.GET)
-                    .send();
-            System.out.printf("/ => %n", response.getContentAsString());
-        }
+        callHelloService(client);
+        callEchoService(client);
+        callHomeService(client);
         client.stop();
+    }
+
+    private static void callHomeService(HttpClient client) throws InterruptedException, TimeoutException, ExecutionException {
+        ContentResponse response = client
+                .newRequest("http://127.0.0.1:7070/")
+                .method(HttpMethod.GET)
+                .send();
+        System.out.printf("/ => %n", response.getContentAsString());
+    }
+
+    private static void callEchoService(HttpClient client) throws InterruptedException, TimeoutException, ExecutionException {
+        ContentResponse response = client
+                .newRequest("http://127.0.0.1:7070/echo")
+                .method(HttpMethod.POST).content(new StringContentProvider("yahoo~"))
+                .header("x-api-key", "--api-token-here--")
+                .send();
+        System.out.printf("/echo => %s%n", response.getContentAsString());
+    }
+
+    private static void callHelloService(HttpClient client) throws InterruptedException, TimeoutException, ExecutionException {
+        Person person = new Person();
+        person.setName("Alice");
+        String payload = gson.toJson(person);
+        ContentResponse response = client
+                .newRequest("http://127.0.0.1:7070/hello")
+                .method(HttpMethod.POST).content(new StringContentProvider(payload))
+                .header("x-api-key", "--api-token-here--")
+            .send();
+        System.out.printf("/hello => %s%n", response.getContentAsString());
     }
 }

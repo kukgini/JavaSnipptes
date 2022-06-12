@@ -43,35 +43,40 @@ public class MyGateway extends HttpServlet {
         server.join();
     }
 
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(HttpServletRequest frontendRequest, HttpServletResponse frontendResponse) throws ServletException, IOException {
         try {
-            authorizeApiKey(req);
+            authorizeApiKey(frontendRequest);
 
-            URI uri = new URI(req.getRequestURI());
+            if (!backend.isStarted()) {
+                backend.start();
+            }
+
+            URI uri = new URI(frontendRequest.getRequestURI());
             System.out.printf("uri=%s%n", uri);
 
-            backend.start();
             Request backendRequest = backend.newRequest(String.format("http://127.0.0.1:8080%s", uri));
-            for (String key : req.getParameterMap().keySet()) {
-                String[] vals = req.getParameterValues(key);
+            for (String key : frontendRequest.getParameterMap().keySet()) {
+                String[] vals = frontendRequest.getParameterValues(key);
                 for (String val : vals) {
                     backendRequest.param(key,val);
                 }
             }
-            backendRequest.method(req.getMethod());
+            backendRequest.method(frontendRequest.getMethod());
 
-            InputStream frontendInputStream = req.getInputStream();
+            InputStream frontendInputStream = frontendRequest.getInputStream();
             backendRequest.content(new InputStreamContentProvider(frontendInputStream));
+
             ContentResponse backendResponse = backendRequest.send();
 
-            resp.setContentType(backendResponse.getMediaType());
+            frontendResponse.setContentType(backendResponse.getMediaType());
 
-            OutputStream frontendOutputStream = resp.getOutputStream();
+            OutputStream frontendOutputStream = frontendResponse.getOutputStream();
             BufferedInputStream backendResponseInputStream = new BufferedInputStream(new ByteArrayInputStream(backendResponse.getContent()));
             backendResponseInputStream.transferTo(frontendOutputStream);
+
         } catch (Throwable t) {
             t.printStackTrace();
-            resp.setStatus(500);
+            frontendResponse.setStatus(500);
         }
     }
 
