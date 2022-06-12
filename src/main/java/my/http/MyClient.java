@@ -58,5 +58,7 @@ public class MyClient {
                     .send();
             System.out.printf("/ => %n", response.getContentAsString());
         }
+        Thread.sleep(5000);
+        client.stop();
     }
 }
