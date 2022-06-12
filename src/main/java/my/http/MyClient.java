@@ -10,14 +10,11 @@ import org.eclipse.jetty.client.util.InputStreamResponseListener;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpMethod;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class MyClient {
     private static Gson gson = new Gson();
@@ -39,6 +36,10 @@ public class MyClient {
 
         while (tasks.size() > 0) {
             if (tasks.peek().isDone()) {
+                Exception e = tasks.peek().get();
+                if (e != null) {
+                    e.printStackTrace();
+                }
                 tasks.remove();
             }
         }

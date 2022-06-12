@@ -55,26 +55,22 @@ public class MyGateway extends HttpServlet {
             System.out.printf("uri=%s%n", uri);
 
             Request backendRequest = backend.newRequest(String.format("http://127.0.0.1:8080%s", uri));
-            for (String key : frontendRequest.getParameterMap().keySet()) {
-                String[] vals = frontendRequest.getParameterValues(key);
-                for (String val : vals) {
-                    backendRequest.param(key,val);
-                }
-            }
             backendRequest.method(frontendRequest.getMethod());
-
+            frontendRequest.getParameterMap().forEach((key,values) -> {
+                for (String value: values) {
+                    backendRequest.param(key,value);
+                }
+            });
             InputStream frontendInputStream = frontendRequest.getInputStream();
-            backendRequest.content(new InputStreamContentProvider(frontendInputStream));
-
-            ContentResponse backendResponse = backendRequest.send();
+            InputStreamContentProvider contentProvider = new InputStreamContentProvider(frontendInputStream);
+            ContentResponse backendResponse = backendRequest.content(contentProvider).send();
 
             frontendResponse.setContentType(backendResponse.getMediaType());
-
             OutputStream frontendOutputStream = frontendResponse.getOutputStream();
             BufferedInputStream backendResponseInputStream = new BufferedInputStream(new ByteArrayInputStream(backendResponse.getContent()));
             backendResponseInputStream.transferTo(frontendOutputStream);
-
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             t.printStackTrace();
             frontendResponse.setStatus(500);
         }
