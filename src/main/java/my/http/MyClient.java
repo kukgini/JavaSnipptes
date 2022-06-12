@@ -2,6 +2,7 @@ package my.http;
 
 import com.google.gson.Gson;
 import my.dto.Person;
+import my.helper.ExecutorMonitor;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Response;
@@ -27,18 +28,12 @@ public class MyClient {
         client.start();
 
         ExecutorService threadpool = Executors.newCachedThreadPool();
+        ExecutorMonitor threadmon = new ExecutorMonitor();
 
-        Queue<Future> tasks = new LinkedList<>();
-
-        tasks.add(threadpool.submit(() -> callHelloService(client)));
-        tasks.add(threadpool.submit(() -> callEchoService(client)));
-        tasks.add(threadpool.submit(() -> callHomeService(client)));
-
-        while (tasks.size() > 0) {
-            if (tasks.peek().isDone()) {
-                tasks.remove();
-            }
-        }
+        threadmon.add(threadpool.submit(() -> callHelloService(client)));
+        threadmon.add(threadpool.submit(() -> callEchoService(client)));
+        threadmon.add(threadpool.submit(() -> callHomeService(client)));
+        threadmon.allGone().get();
 
         threadpool.shutdown();
         client.stop();
