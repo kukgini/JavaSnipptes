@@ -8,10 +8,10 @@ public class MyJson {
     public static void main(String[] args) {
         Gson gson = new Gson();
 
-        String json = "{\"name\":\"noname\"}";
+        String json = "{\"name\":\"alice\"}";
         Person person = gson.fromJson(json, Person.class);
 
-        System.out.println(person);
-        System.out.println(gson.toJson(person));
+        System.out.printf("name=%s%n", person.getName());
+        System.out.printf("%s%n", gson.toJson(person));
     }
 }
