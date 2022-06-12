@@ -1,6 +1,7 @@
 package my.http;
 
 import com.google.gson.Gson;
+import my.dto.ServiceError;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,7 +29,7 @@ public class MyServerServlet extends HttpServlet {
             invoke(method, payload, resp.getWriter());
         } catch (Throwable t) {
             t.printStackTrace();
-            print(resp.getWriter(), new MyError(t), MyError.class);
+            print(resp.getWriter(), new ServiceError(t), ServiceError.class);
             resp.setStatus(500);
         }
     }

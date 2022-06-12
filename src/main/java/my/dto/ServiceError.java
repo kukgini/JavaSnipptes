@@ -1,10 +1,10 @@
-package my.http;
+package my.dto;
 
-public class MyError {
+public class ServiceError {
     int code;
     String message;
 
-    public MyError(Throwable t) {
+    public ServiceError(Throwable t) {
         this.message = t.getMessage();
     }
 }
