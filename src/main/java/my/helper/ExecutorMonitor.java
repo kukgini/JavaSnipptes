@@ -1,5 +1,7 @@
 package my.helper;
 
+import static my.helper.GeneralFunctions.*;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +20,7 @@ public class ExecutorMonitor {
                 if (list.peek().isDone()) {
                     list.remove();
                 }
+                sleep(100);
             }
         });
     }
