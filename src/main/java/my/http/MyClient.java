@@ -28,7 +28,7 @@ public class MyClient {
 
         ExecutorService threadpool = Executors.newCachedThreadPool();
 
-        Queue<Future<Exception>> tasks = new LinkedList<>();
+        Queue<Future> tasks = new LinkedList<>();
 
         tasks.add(threadpool.submit(() -> callHelloService(client)));
         tasks.add(threadpool.submit(() -> callEchoService(client)));
@@ -36,10 +36,6 @@ public class MyClient {
 
         while (tasks.size() > 0) {
             if (tasks.peek().isDone()) {
-                Exception e = tasks.peek().get();
-                if (e != null) {
-                    e.printStackTrace();
-                }
                 tasks.remove();
             }
         }
@@ -48,7 +44,7 @@ public class MyClient {
         client.stop();
     }
 
-    private static Exception callHomeService(HttpClient client) {
+    private static void callHomeService(HttpClient client) {
         try {
             ContentResponse response = client
                 .newRequest("http://127.0.0.1:7070/")
@@ -56,12 +52,11 @@ public class MyClient {
                 .send();
             System.out.printf("/ => %n", response.getContentAsString());
         } catch (Exception e) {
-            return e;
+            e.printStackTrace();
         }
-        return null;
     }
 
-    private static Exception callEchoService(HttpClient client) {
+    private static void callEchoService(HttpClient client) {
         try {
             ContentResponse response = client
                 .newRequest("http://127.0.0.1:7070/echo")
@@ -70,12 +65,11 @@ public class MyClient {
                 .send();
             System.out.printf("/echo => %s%n", response.getContentAsString());
         } catch (Exception e) {
-            return e;
+            e.printStackTrace();
         }
-        return null;
     }
 
-    private static Exception callHelloService(HttpClient client) {
+    private static void callHelloService(HttpClient client) {
         try {
             Person person = new Person();
             person.setName("Alice");
@@ -87,8 +81,7 @@ public class MyClient {
                 .send();
             System.out.printf("/hello => %s%n", response.getContentAsString());
         } catch (Exception e) {
-            return e;
+            e.printStackTrace();
         }
-        return null;
     }
 }
