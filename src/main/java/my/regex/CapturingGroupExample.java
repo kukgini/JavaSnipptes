@@ -5,23 +5,16 @@ import java.util.regex.Pattern;
 
 public class CapturingGroupExample {
     public static void main( String args[] ) {
-        // String to be scanned to find the pattern.
-        String line = "This order was placed for QT3000! OK?";
-        String pattern = "(.*)(\\d+)(.*)";
+        String input = "This order was placed for QT3000! OK?";
 
-        // Create a Pattern object
-
-        Pattern r = Pattern.compile(pattern);
-
-        // Now create matcher object.
-        Matcher m = r.matcher(line);
+        String expression = "(.*)\\d+(.*)";
+        Pattern pattern = Pattern.compile(expression);
+        Matcher m = pattern.matcher(input);
 
         if (m.find( )) {
-            System.out.println("Found value: " + m.group(0) );
-            System.out.println("Found value: " + m.group(1) );
-            System.out.println("Found value: " + m.group(2) );
-            System.out.println("Found value: " + m.group(3) );
-            System.out.println("Found value: " + m.group(4) );
+            for (int i = 0; i <= m.groupCount(); i++) {
+                System.out.printf("capturing group %s = %s%n", i, m.group(i));
+            }
         } else {
             System.out.println("NO MATCH");
         }
