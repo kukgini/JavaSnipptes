@@ -16,4 +16,8 @@ public class MyServerActions {
         return input;
     }
 
+    public String home() {
+        return "home page";
+    }
+
 }
