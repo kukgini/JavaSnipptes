@@ -13,9 +13,6 @@ import java.util.function.Consumer;
  * https://www.programcreek.com/java-api-examples/?class=java.nio.file.DirectoryStream&method=close
  */
 public class DirResource {
-	public static void main(String[] args) {
-		DirResource.ls(System.getProperty("java.io.tmpdir"), "*.txt", System.out::println);
-	}
 	public static void ls(String path, String glob, Consumer<Path> block) {
 		try (DirectoryStream<Path> resource = Files.newDirectoryStream(Paths.get(path), glob)){
 			resource.forEach(block);
